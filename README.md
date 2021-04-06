@@ -1,6 +1,30 @@
 # 1. Introduction
 A minimal docker-compose setup with Nginx which is dynamically configured using Confd and etcd for it's key value store. Confd support a fairly good number of backends but for this example etcd was the chosen implementation. Etcd uses Raft which is a consensus algorithm to ensure data integrity. Even though this example doesn't use it, Confd-Etcd support TLS/SSL to encrypt and protect the transfer of data between the etcd and confd servers.
 
+##### Backends
+
+- etcd
+
+- consul
+
+- vault
+
+- environment variables
+
+- file
+
+- redis
+
+- zookeeper
+
+- dynamodb
+
+- rancher
+
+- ssm (AWS Simple Systems Manager Parameter Store)
+
+  
+
 [etcd](https://etcd.io/),  
 
 [bitnami/etcd (from dockerhub)](https://hub.docker.com/r/bitnami/etcd/), 
@@ -10,6 +34,8 @@ A minimal docker-compose setup with Nginx which is dynamically configured using 
 
 
 ![confd-etcd](confd-etcd.png)
+
+### Confd Configuration Files
 
 default.conf.toml
 
