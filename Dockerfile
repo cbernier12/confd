@@ -13,8 +13,6 @@ WORKDIR /root
 COPY .bashrc .
 WORKDIR /
 
-# /usr/share/nginx/html
-
 EXPOSE 2379
 
 CMD ["nginx", "-g", "daemon off;"]

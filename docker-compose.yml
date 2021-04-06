@@ -19,7 +19,6 @@ services:
             - ALLOW_NONE_AUTHENTICATION=yes
             - ETCD_LISTEN_CLIENT_URLS=http://10.5.0.100:2379,http://127.0.0.1:2379
             - ETCD_ADVERTISE_CLIENT_URLS=http://10.5.0.100:2379
-            # - ETCD_ENDPOINTS=http://10.5.0.100:2379
         volumes:
             - ./etcd:/app:z
         ports:
@@ -28,7 +27,6 @@ services:
         networks:
             app-tier:
                 ipv4_address: 10.5.0.100
-        # command: chmod +x /app/etcd-run.sh;sh /app/etcd-run.sh
         # entrypoint: etcd
 
     nginx-confd:
@@ -48,4 +46,3 @@ services:
         networks:
             app-tier:
                 ipv4_address: 10.5.0.101
-        # command: chmod +x /app/confd-run.sh;sh /app/confd-run.sh
