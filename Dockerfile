@@ -1,7 +1,7 @@
-FROM alpine:latest
-MAINTAINER Alexey Baikov <sysboss[@]mail.ru>
+FROM nginx:mainline-alpine
 
-ENV CONFD_VERSION="0.11.0" \
+
+ENV CONFD_VERSION="0.16.0" \
     CONFD_URL="https://github.com/kelseyhightower/confd/releases/download"
 
 RUN apk --no-cache --update add ca-certificates openssl \
@@ -9,11 +9,14 @@ RUN apk --no-cache --update add ca-certificates openssl \
  && chmod +x /bin/confd \
  && apk del ca-certificates openssl
 
-RUN apk add --no-cache nginx \
- && mkdir -p /run/nginx \
- && rm -rf /var/cache/apk/*
+WORKDIR /root
+COPY .bashrc .
+WORKDIR /
 
-ADD config /etc/confd
-COPY run.sh /run.sh
+# /usr/share/nginx/html
 
-CMD ["sh", "/run.sh"]
+EXPOSE 2379
+
+CMD ["nginx", "-g", "daemon off;"]
+
+

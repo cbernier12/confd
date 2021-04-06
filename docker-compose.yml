@@ -1,8 +1,51 @@
-nginx-confd:
-  build: .
-  volumes:
-    - ./website:/var/www/localhost/htdocs
-  environment:
-    - SERVER_NAME=sample.com
-  ports:
-    - "3000:80"
+version: '2'
+
+networks:
+    app-tier:
+        name: app-tier
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 10.5.0.0/16
+                  gateway: 10.5.0.1
+
+services:
+    etcd:
+        # image: gcr.io/etcd-development/etcd:v3.2.32
+        image: 'bitnami/etcd:latest'
+        container_name: 'etcd-server'
+        environment:
+            - ETCDCTL_API=3
+            - ALLOW_NONE_AUTHENTICATION=yes
+            - ETCD_LISTEN_CLIENT_URLS=http://10.5.0.100:2379,http://127.0.0.1:2379
+            - ETCD_ADVERTISE_CLIENT_URLS=http://10.5.0.100:2379
+            # - ETCD_ENDPOINTS=http://10.5.0.100:2379
+        volumes:
+            - ./etcd:/app:z
+        ports:
+            - 2379:2379
+            - 2380:2380
+        networks:
+            app-tier:
+                ipv4_address: 10.5.0.100
+        # command: chmod +x /app/etcd-run.sh;sh /app/etcd-run.sh
+        # entrypoint: etcd
+
+    nginx-confd:
+        image: 'nginx-confd'
+        container_name: 'nginx-server'
+        build: .
+        depends_on:
+            - etcd
+        volumes:
+            - ./config/conf.d:/etc/confd/conf.d:z
+            - ./config/templates:/etc/confd/templates:z
+            - ./confd:/app:z
+        links:
+            - "etcd"
+        ports:
+            - 3000:80
+        networks:
+            app-tier:
+                ipv4_address: 10.5.0.101
+        # command: chmod +x /app/confd-run.sh;sh /app/confd-run.sh
