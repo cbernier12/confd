@@ -144,4 +144,4 @@ server_name telushealth.com;
 
 ## 3. Managing Configurations Using an ETCD Client and Cluster
 
-curl http://10.5.0.100:2379/v3/keys/message -XGET -d value="SERVER_NAME"
+curl http://10.5.0.100:2379/v3/keys/nginx/domain -XPUT -d value="telushealth.com"
