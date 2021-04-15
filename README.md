@@ -1,5 +1,13 @@
 # 1. Introduction
-A minimal docker-compose setup with Nginx which is dynamically configured using Confd and etcd for it's key value store. Confd support a fairly good number of backends but for this example etcd was the chosen implementation. Etcd uses Raft which is a consensus algorithm to ensure data integrity. Even though this example doesn't use it, Confd-Etcd support TLS/SSL to encrypt and protect the transfer of data between the etcd and confd servers.
+A minimal docker-compose setup with Nginx which is dynamically configured using confd and etcd for it's key value store. Confd support a fairly good number of back-ends but for this example etcd was the chosen implementation. Etcd uses Raft which is a consensus algorithm to ensure data integrity. Even though this example doesn't use it, confd-etcd support TLS/SSL to encrypt and protect the transfer of data between the etcd and confd servers. 
+
+*The repository does not look like it is being maintained and there are other projects that forked from it and are still being maintained.* 
+
+[remco](https://github.com/HeavyHorst/remco)
+
+[tail-f confd (Basic)](https://developer.cisco.com/site/confD/)
+
+
 
 ##### Backends
 
@@ -23,7 +31,10 @@ A minimal docker-compose setup with Nginx which is dynamically configured using 
 
 - ssm (AWS Simple Systems Manager Parameter Store)
 
-  
+
+
+
+##### Configuration used
 
 [etcd](https://etcd.io/),  
 
@@ -103,7 +114,7 @@ docker-compose up --build
 docker exec -it nginx-server sh
 ```
 
-##### Set Confd to either onetime update, polling or watch
+##### Set Confd to either onetime update, polling
 
 ```
 confd -interval=5 -backend etcdv3 -node http://10.5.0.100:2379 & polling on time
@@ -128,10 +139,10 @@ server_name localhost;
 docker exec -it etcd-server /bin/bash
 ```
 
-Insert a server_name keypair into the etcd server.
+Insert a server_name key-pair into the etcd server.
 
 ```
-etcdctl put /nginx/domain 'telushealth.com'
+etcdctl put /nginx/domain 'test.com'
 ```
 
 Go back into the confd-nginx server and look at the NGINX config. The **server_name** value should be: 
@@ -139,9 +150,9 @@ Go back into the confd-nginx server and look at the NGINX config. The **server_n
 ```
 cat /etc/nginx/conf.d/default.conf
 ...
-server_name telushealth.com;
+server_name test.com;
 ```
 
-## 3. Managing Configurations Using an ETCD Client and Cluster
+## 3. Managing Configurations Using an Etcd Client and Cluster
 
-curl http://10.5.0.100:2379/v3/keys/nginx/domain -XPUT -d value="telushealth.com"
+curl http://10.5.0.100:2379/v3/keys/nginx/domain -XPUT -d value="test.com"

@@ -14,6 +14,7 @@ COPY .bashrc .
 WORKDIR /
 
 EXPOSE 2379
+EXPOSE 2380
 
 CMD ["nginx", "-g", "daemon off;"]
 

@@ -11,23 +11,22 @@ networks:
 
 services:
     etcd:
-        # image: gcr.io/etcd-development/etcd:v3.2.32
         image: 'bitnami/etcd:latest'
         container_name: 'etcd-server'
         environment:
             - ETCDCTL_API=3
             - ALLOW_NONE_AUTHENTICATION=yes
             - ETCD_LISTEN_CLIENT_URLS=http://10.5.0.100:2379,http://127.0.0.1:2379
-            - ETCD_ADVERTISE_CLIENT_URLS=http://10.5.0.100:2379
+            - ETCD_ADVERTISE_CLIENT_URLS=http://10.5.0.100:2379,http://10.5.0.100:4001
         volumes:
             - ./etcd:/app:z
         ports:
             - 2379:2379
             - 2380:2380
+            - 4001:4001
         networks:
             app-tier:
                 ipv4_address: 10.5.0.100
-        # entrypoint: etcd
 
     nginx-confd:
         image: 'nginx-confd'
@@ -46,3 +45,21 @@ services:
         networks:
             app-tier:
                 ipv4_address: 10.5.0.101
+
+        # image: gcr.io/etcd-development/etcd:v3.2.32
+        # image: 'bitnami/etcd:latest'
+        # container_name: 'etcd-client'
+        # environment:
+        #     - ETCDCTL_API=3
+        #     - ALLOW_NONE_AUTHENTICATION=yes
+        #     - ETCD_LISTEN_CLIENT_URLS=http://10.5.0.100:2379,http://127.0.0.1:2379
+        #     - ETCD_ADVERTISE_CLIENT_URLS=http://10.5.0.100:2379
+        # volumes:
+        #     - ./etcd:/app:z
+        # ports:
+        #     - 2379:2379
+        #     - 2380:2380
+        # networks:
+        #     app-tier:
+        #         ipv4_address: 10.5.0.101
+        # entrypoint: etcd
