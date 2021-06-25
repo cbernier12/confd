@@ -156,3 +156,4 @@ server_name test.com;
 ## 3. Managing Configurations Using an Etcd Client and Cluster
 
 curl http://10.5.0.100:2379/v3/keys/nginx/domain -XPUT -d value="test.com"
+.
